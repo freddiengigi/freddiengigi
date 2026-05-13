@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | MOUT MINISTRY KU</title>
+    <style>
+        :root {
+            --primary: #1a2a6c;
+            --gold: #f1c40f;
+            --accent: #b21f1f;
+            --white: #ffffff;
+            --light-bg: #f0f2f5;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            background-color: var(--light-bg);
+            display: flex;
+            overflow-x: hidden;
+        }
+
+        /* --- MENU & SIDEBAR --- */
+        .menu-trigger {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            font-size: 28px;
+            cursor: pointer;
+            z-index: 2000;
+            color: var(--primary);
+            background: var(--white);
+            padding: 8px 12px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: 0.3s;
+        }
+        .menu-trigger:hover { background: var(--gold); }
+
+        .sidebar {
+            width: 300px;
+            background: var(--primary);
+            height: 100vh;
+            color: white;
+            position: fixed;
+            left: -300px;
+            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1500;
+            padding: 90px 20px 20px;
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+        .sidebar.active { left: 0; }
+
+        .nav-links { list-style: none; padding: 0; }
+        .nav-links li {
+            padding: 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-bottom: 8px;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 500;
+        }
+        .nav-links li:hover { background: rgba(255,255,255,0.15); color: var(--gold); }
+
+        .admin-domain {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.2);
+            display: none; 
+        }
+        .admin-label { font-size: 0.75rem; color: var(--gold); text-transform: uppercase; letter-spacing: 1px; margin-left: 14px; }
+
+        /* --- MAIN CONTENT --- */
+        .main { flex: 1; padding: 100px 30px 40px; transition: 0.4s; width: 100%; }
+
+        .welcome-card {
+            background: var(--white);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+            border-left: 8px solid var(--primary);
+        }
+
+        .objectives-strip {
+            background: linear-gradient(to right, var(--primary), #2a4099);
+            color: white;
+            padding: 18px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-around;
+            font-weight: bold;
+            font-size: 0.9rem;
+            margin-bottom: 30px;
+            text-align: center;
+            flex-wrap: wrap;
+        }
+
+        /* --- BIBLE STYLES --- */
+        .bible-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .bible-card { background: white; padding: 20px; border-radius: 15px; height: 600px; overflow-y: auto; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .book-list div { padding: 10px; border-bottom: 1px solid #eee; cursor: pointer; transition: 0.2s; }
+        .book-list div:hover { background: #fff9e6; color: var(--accent); padding-left: 15px; }
+        
+        .selector-container { display: flex; gap: 8px; margin-bottom: 15px; flex-wrap: wrap; }
+        .bible-btn { background: var(--primary); color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; font-size: 0.9rem; }
+        .bible-btn:hover { background: var(--gold); color: var(--primary); }
+        
+        .verse-item { padding: 8px; border-radius: 5px; line-height: 1.6; transition: 0.3s; }
+        .verse-num { font-weight: bold; color: var(--accent); margin-right: 8px; }
+        .highlight-verse { background-color: #fff9e6; border-left: 4px solid var(--gold); }
+
+        /* --- DASHBOARD DAILY VERSE --- */
+        .daily-verse-card {
+            background: linear-gradient(135deg, #ffffff 0%, #fffde6 100%);
+            padding: 25px;
+            border-radius: 15px;
+            border-top: 4px solid var(--accent);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+
+        .hidden { display: none; }
+        .logout-link { color: #ff5e5e !important; margin-top: 50px; border: 1px solid #ff5e5e !important; }
+
+        @media (max-width: 600px) {
+            .objectives-strip { flex-direction: column; gap: 10px; }
+            .main { padding: 80px 15px 40px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="menu-trigger" onclick="toggleSidebar()">☰</div>
+
+    <nav class="sidebar" id="sidebar">
+        <ul class="nav-links">
+            <li onclick="showSection('home')">🏠 Dashboard Home</li>
+            <li onclick="showSection('bible')">📖 Bible kjv</li>
+            <li>📅 Events Page</li>
+            <li>💡 Study Guide (Coming Soon)</li>
+            <li>🤖 Faith AI Search</li>
+        </ul>
+
+        <div class="admin-domain" id="adminSection">
+            <span class="admin-label">Admin Domain</span>
+            <ul class="nav-links">
+                <li>👥 Member Directory</li>
+                <li>➕ Add Admin/Member</li>
+                <li>📢 Send Announcements</li>
+                <li>📝 Update Events</li>
+            </ul>
+        </div>
+
+        <li class="nav-links li logout-link" onclick="handleLogout()" style="list-style: none;">🚪 LOGOUT</li>
+    </nav>
+
+    <div class="main">
+        <div class="welcome-card">
+            <h1>Welcome, <span id="userName">minister</span> 😊</h1>
+            <p style="color: #666; font-style: italic; margin-top: 10px;">
+                "Go therefore and make disciples of all nations..." — <strong>Matthew 28:19</strong>
+            </p>
+        </div>
+
+        <div class="objectives-strip">
+            <span>MISSION</span> | <span>EVANGELISM</span> | <span>EMPOWERMENT</span> | <span>DISCIPLESHIP</span>
+        </div>
+
+        <!-- HOME VIEW -->
+        <div id="homeView">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+                <div class="daily-verse-card" id="dailyContainer">
+                    <h3 style="color: var(--accent); margin-top: 0;">🌅 Morning Bread</h3>
+                    <p id="dailyVerseText" style="font-size: 1.1rem; color: #333;">Fetching your daily inspiration...</p>
+                    <strong id="dailyVerseRef" style="color: var(--primary);"></strong>
+                </div>
+
+                <div style="background: white; padding: 25px; border-radius: 15px; border-top: 4px solid var(--gold);">
+                    <h3>Portal Notice</h3>
+                    <p>Welcome to the Mout Ministry Portal. Stay tuned for updates.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- BIBLE VIEW -->
+        <div id="bibleView" class="hidden">
+            <div id="bibleControls" class="selector-container">
+                <button class="bible-btn" onclick="resetBible()">📚 Back to Books</button>
+            </div>
+
+            <div class="bible-grid" id="bibleMainGrid">
+                <div class="bible-card">
+                    <h2 style="color: var(--primary); border-bottom: 2px solid var(--gold); padding-bottom: 10px;">Old Testament</h2>
+                    <div id="otList" class="book-list"></div>
+                </div>
+                <div class="bible-card">
+                    <h2 style="color: var(--primary); border-bottom: 2px solid var(--gold); padding-bottom: 10px;">New Testament</h2>
+                    <div id="ntList" class="book-list"></div>
+                </div>
+            </div>
+
+            <div id="readingView" class="bible-card hidden" style="width: 100%; height: auto; min-height: 500px;">
+                <div id="chapterContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- NAVIGATION LOGIC ---
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('active'); }
+        
+        function showSection(viewId) {
+            document.getElementById('homeView').classList.add('hidden');
+            document.getElementById('bibleView').classList.add('hidden');
+            document.getElementById(viewId + 'View').classList.remove('hidden');
+            if (viewId === 'home') getDailyVerse();
+            if(window.innerWidth < 1000) document.getElementById('sidebar').classList.remove('active');
+        }
+
+        function handleLogout() {
+            if(confirm("Are you sure?")) { localStorage.clear(); window.location.href = 'index.html'; }
+        }
+
+        // --- BIBLE LOGIC ---
+        const ot = ["Genesis", "Exodus", "Leviticus", "Numbers", "Deuteronomy", "Joshua", "Judges", "Ruth", "1 Samuel", "2 Samuel", "1 Kings", "2 Kings", "1 Chronicles", "2 Chronicles", "Ezra", "Nehemiah", "Esther", "Job", "Psalms", "Proverbs", "Ecclesiastes", "Song of Solomon", "Isaiah", "Jeremiah", "Lamentations", "Ezekiel", "Daniel", "Hosea", "Joel", "Amos", "Obadiah", "Jonah", "Micah", "Nahum", "Habakkuk", "Zephaniah", "Haggai", "Zechariah", "Malachi"];
+        const nt = ["Matthew", "Mark", "Luke", "John", "Acts", "Romans", "1 Corinthians", "2 Corinthians", "Galatians", "Ephesians", "Philippians", "Colossians", "1 Thessalonians", "2 Thessalonians", "1 Timothy", "2 Timothy", "Titus", "Philemon", "Hebrews", "James", "1 Peter", "2 Peter", "1 John", "2 John", "3 John", "Jude", "Revelation"];
+
+        function initBible() {
+            const otList = document.getElementById('otList');
+            const ntList = document.getElementById('ntList');
+            ot.forEach(book => {
+                let d = document.createElement('div'); d.innerText = book;
+                d.onclick = () => showChapterSelector(book);
+                otList.appendChild(d);
+            });
+            nt.forEach(book => {
+                let d = document.createElement('div'); d.innerText = book;
+                d.onclick = () => showChapterSelector(book);
+                ntList.appendChild(d);
+            });
+        }
+
+        function showChapterSelector(book) {
+            document.getElementById('bibleMainGrid').classList.add('hidden');
+            document.getElementById('readingView').classList.remove('hidden');
+            const content = document.getElementById('chapterContent');
+            
+            // Standardizing chapter counts roughly for the selector
+            let counts = {"Psalms": 150, "Genesis": 50, "Exodus": 40, "Isaiah": 66, "Matthew": 28, "John": 21};
+            let max = counts[book] || 30; 
+
+            let html = `<h2>${book}</h2><p>Select a Chapter:</p><div class="selector-container" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(45px, 1fr)); gap:5px;">`;
+            for(let i=1; i<=max; i++) {
+                html += `<button class="bible-btn" onclick="fetchBibleData('${book}', ${i})">${i}</button>`;
+            }
+            html += `</div>`;
+            content.innerHTML = html;
+        }
+
+        async function fetchBibleData(book, chapter) {
+            const content = document.getElementById('chapterContent');
+            content.innerHTML = "<h3>Opening the Word...</h3>";
+            
+            // Fallback strategy: Try NIV first, then kjv (king james version)
+            const translations = ['niv', 'kjv'];
+            let found = false;
+
+            for (let t of translations) {
+                if (found) break;
+                try {
+                    const res = await fetch(`https://bible-api.com/${book}+${chapter}?translation=${t}`);
+                    if (!res.ok) continue;
+                    const data = await res.json();
+                    found = true;
+
+                    let html = `<h2>${data.reference} (${t.toUpperCase()})</h2>`;
+                    html += `<div class="selector-container"><strong>Jump to Verse:</strong> `;
+                    data.verses.forEach(v => {
+                        html += `<button onclick="scrollToVerse(${v.verse})" style="padding:4px; font-size:11px; cursor:pointer;">${v.verse}</button> `;
+                    });
+                    html += `</div><hr>`;
+
+                    data.verses.forEach(v => {
+                        html += `<div class="verse-item" id="v-${v.verse}"><span class="verse-num">${v.verse}</span> ${v.text}</div>`;
+                    });
+                    content.innerHTML = html;
+                } catch (e) { console.log("Translation unavailable: " + t); }
+            }
+            if(!found) content.innerHTML = "<h3>Error loading chapter. Please try another book.</h3>";
+        }
+
+        function scrollToVerse(v) {
+            const el = document.getElementById(`v-${v}`);
+            if(el) {
+                document.querySelectorAll('.verse-item').forEach(i => i.classList.remove('highlight-verse'));
+                el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                el.classList.add('highlight-verse');
+            }
+        }
+
+        function resetBible() {
+            document.getElementById('bibleMainGrid').classList.remove('hidden');
+            document.getElementById('readingView').classList.add('hidden');
+        }
+
+        // --- DAILY VERSE LOGIC ---
+        async function getDailyVerse() {
+            const verses = ["John 3:16", "Philippians 4:13", "Psalm 23:1", "Proverbs 3:5", "Romans 8:28", "Isaiah 41:10"];
+            const pick = verses[Math.floor(Math.random() * verses.length)];
+            try {
+                const res = await fetch(`https://bible-api.com/${pick}`);
+                const data = await res.json();
+                document.getElementById('dailyVerseText').innerText = `"${data.text.trim()}"`;
+                document.getElementById('dailyVerseRef').innerText = `— ${data.reference}`;
+            } catch(e) {
+                document.getElementById('dailyVerseText').innerText = "His mercies are new every morning!";
+            }
+        }
+
+        window.onload = () => {
+            initBible();
+            getDailyVerse();
+            // Admin Check
+            if ("fredrickngigimatimu@gmail.com" === "fredrickngigimatimu@gmail.com") {
+                document.getElementById('adminSection').style.display = 'block';
+            }
+        };
+    </script>
+</body>
+</html>
