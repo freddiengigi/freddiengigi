@@ -29,7 +29,7 @@ The website aims to:
 
 ## Installation
 1. Clone the repository:
-   git clone https://github.com/yourusername/mout-church-website.git
+   git clone https://github.com/freddiengigi/mout-church-website.git
 
 2. Open the project folder.
 
