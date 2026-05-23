@@ -1,16 +1,50 @@
-## Hi there 👋
+```md id="moutchurchreadme92"
+# MOUT Church Website
 
-<!--
-**freddiengigi/freddiengigi** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
+Welcome to the official MOUT Church Website project.  
+This website was created to provide church members and visitors with information about the church, services, ministries, events, sermons, and contact details.
 
-Here are some ideas to get you started:
+## Features
+- Home page with church introduction
+- About Us section
+- Church ministries information
+- Sermons and teachings section
+- Events and announcements
+- Contact page
+- Responsive mobile-friendly design
+- Social media integration
 
-- 🔭 I’m currently working on ...
-- 🌱 I’m currently learning ...
-- 👯 I’m looking to collaborate on ...
-- 🤔 I’m looking for help with ...
-- 💬 Ask me about ...
-- 📫 How to reach me: ...
-- 😄 Pronouns: ...
-- ⚡ Fun fact: ...
--->
+## Technologies Used
+- HTML5
+- CSS3
+- JavaScript
+- Bootstrap
+
+## Purpose of the Website
+The website aims to:
+- Improve communication within the church
+- Reach more people online
+- Share sermons and church updates
+- Provide easy access to church information
+
+## Installation
+1. Clone the repository:
+   git clone https://github.com/yourusername/mout-church-website.git
+
+2. Open the project folder.
+
+3. Run the `index.html` file in your browser.
+
+## Future Improvements
+- Online prayer request form
+- Live streaming integration
+- Online donations system
+- Member login portal
+- Events registration system
+
+## Author
+Fredrick ngigi
+
+## License
+This project is for educational and church purposes.
+```
